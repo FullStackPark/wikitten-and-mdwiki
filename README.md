@@ -1,6 +1,6 @@
 ---
-"title": "Wikitten and MDwiki merged Markdown Wiki system",
-"author": "Uranus Zhou"
+title: Wikitten and MDwiki merged Markdown Wiki system
+author: Uranus Zhou
 ---
 
 # Wikitten and MDwiki merged Markdown Wiki system
