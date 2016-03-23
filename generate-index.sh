@@ -32,10 +32,10 @@ PTITLE=`basename "$2"`
 if [ "x$PTITLE" = "x" ]; then
 	PTITLE="/"
 fi
-echo "\`\`\`\n\"title\": \"$PTITLE\"\n\`\`\`\n" > $OUTTMP
+echo -e "\`\`\`\n\"title\": \"$PTITLE\"\n\`\`\`\n" > $OUTTMP
 
 RELPATH="/$2"
-echo "# Auto-index of '$RELPATH'\n\n| Name | Last Modified | Size | Type |\n| -------------------- | -------------------- | ---------- | -------- |" >> $OUTTMP
+echo -e "# Auto-index of '$RELPATH'\n\n| Name | Last Modified | Size | Type |\n| -------------------- | -------------------- | ---------- | -------- |" >> $OUTTMP
 
 PDIR=`dirname "$2"`
 if [ "x$PDIR" = "x" -o "x$PDIR" = "x." ]; then
