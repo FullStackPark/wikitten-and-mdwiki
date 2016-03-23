@@ -34,12 +34,22 @@ if [ "x$PTITLE" = "x" ]; then
 fi
 echo -e "\`\`\`\n\"title\": \"$PTITLE\"\n\`\`\`\n" > $OUTTMP
 
-echo -e "# Auto-index of '/$2'\n\n| Name | Last Modified | Size | Type |\n| -------------------- | -------------------- | ---------- | -------- |" >> $OUTTMP
+RELPATH="/$2"
+echo -e "# Auto-index of '$RELPATH'\n\n| Name | Last Modified | Size | Type |\n| -------------------- | -------------------- | ---------- | -------- |" >> $OUTTMP
 
-echo "| [&#x21E7; [parent directory]](../index.md) | | | |" >> $OUTTMP
+PDIR=`dirname "$2"`
+if [ "x$PDIR" = "x" -o "x$PDIR" = "x." ]; then
+	PDIR="/index.md"
+else
+	PDIR="/$PDIR/index.md"
+fi
+echo "| [&#x21E7; [parent directory]]($PDIR) | | | |" >> $OUTTMP
 
-find $INDIR -mindepth 1 -maxdepth 1 -type d -printf "| [&#x1F4C1; %f](%f/index.md) | %TY-%Tm-%Td %TH:%TM:%.2TS | %s | %M |\n" >> $OUTTMP
-find $INDIR -maxdepth 1 -type f \( -iname \*.markdown -o -iname \*.md -a ! -name index.md \) -printf "| [&#x1F4D5; %f](%f) | %TY-%Tm-%Td %TH:%TM:%.2TS | %s | %M |\n" >> $OUTTMP
+if [ "x$2" = "x" ]; then
+	RELPATH=""
+fi
+find $INDIR -mindepth 1 -maxdepth 1 -type d -printf "| [&#x1F4C1; %f]("$RELPATH"/%f/index.md) | %TY-%Tm-%Td %TH:%TM:%.2TS | %s | %M |\n" >> $OUTTMP
+find $INDIR -maxdepth 1 -type f \( -iname \*.markdown -o -iname \*.md -a ! -name index.md \) -printf "| [&#x1F4D5; %f]("$RELPATH"/%f) | %TY-%Tm-%Td %TH:%TM:%.2TS | %s | %M |\n" >> $OUTTMP
 
 # whether need to overwrite index file
 if [ -s "$INDIR/$OUTFILE" ]; then
