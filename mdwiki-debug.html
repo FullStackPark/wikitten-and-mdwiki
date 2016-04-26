@@ -1804,7 +1804,7 @@ if (typeof exports === 'object') {
             if (! $.md.util.isRelativeUrl(href))
                 return;
 
-            if (isImage && ! $.md.util.isRelativePath(href))
+            if (isImage && ! $.md.util.isRelativePath(href) && href.charAt(0) != '/')
                 return;
 
             if (!isImage && $.md.util.isGimmickLink(link))
