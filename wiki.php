@@ -112,7 +112,12 @@ class Wiki
             $html = $renderer($source);
         }
         if ($renderer && $renderer == 'Markdown') {
-            $html = \Michelf\MarkdownExtra::defaultTransform($source);
+            if (strpos($source, "[gimmick: math]()") !== false) {
+		$html = '<script type="text/javascript" src="https://cdn.bootcss.com/mathjax/2.6.1/MathJax.js?config=TeX-AMS_CHTML"></script>' . PHP_EOL;
+		$source = str_replace("[gimmick: math]()", "", $source);
+                $html .= \Michelf\MarkdownExtra::defaultTransform($source);
+            } else
+                $html = \Michelf\MarkdownExtra::defaultTransform($source);
         }
 
         $this->_view('render', array(
