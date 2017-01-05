@@ -17,7 +17,7 @@ function e($dirty) {
 
         <base href="<?php echo BASE_URL; ?>/">
 
-        <link rel="shortcut icon" href="favicon.ico">
+        <link rel="shortcut icon" href="static/img/favicon.ico">
 
         <?php if (USE_DARK_THEME): ?>
             <link rel="stylesheet" href="static/css/bootstrap_dark.min.css">
@@ -45,6 +45,7 @@ function e($dirty) {
         <script src="static/js/jquery.min.js"></script>
         <script src="static/js/prettify.js"></script>
         <script src="static/js/codemirror.min.js"></script>
+        <script src="static/js/lunr.min.js"></script>
     </head>
 <body>
     <div id="main">
