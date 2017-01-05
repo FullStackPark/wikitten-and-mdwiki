@@ -16,3 +16,8 @@
   * [Index...](Travel/index.md)
 
 [Blog](https://zohead.com/)
+
+[🔍]()
+
+  * # Search file name or content.
+  * [<input id="search_input" type="text"/>](#)

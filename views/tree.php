@@ -29,7 +29,7 @@ function tree($array, $parent, $parts = array(), $step = 0) {
 ?>
 
 <div id="tree-filter" class="input-group">
-    <input type="text" id="tree-filter-query" placeholder="Search file &amp; directory names." class="form-control input-sm">
+    <input type="text" id="tree-filter-query" placeholder="Search file name or content." class="form-control input-sm">
     <a id="tree-filter-clear-query" title="Clear current search..." class="input-group-addon input-sm">
         <i class="glyphicon glyphicon-remove"></i>
     </a>
@@ -56,6 +56,7 @@ function tree($array, $parent, $parts = array(), $step = 0) {
             filterInput      = $('#tree-filter-query'),
             clearFilterInput = $('#tree-filter-clear-query')
         ;
+	var search_index_load = 0, search_indexes = null;
 
         // Auto-focus the search field:
         filterInput.focus();
@@ -76,6 +77,30 @@ function tree($array, $parent, $parts = array(), $step = 0) {
         $(document).keyup(function(e) {
             e.keyCode == 27 && filterInput.hasClass('active') && cancelFilterAction();
         });
+
+	function doSearch(query)
+	{
+	    if (search_indexes != null) {
+		var s_res = search_indexes.search(query);
+		var t_html = '';
+		for (var i = 0; i < s_res.length; i++) {
+		    var t_pos = s_res[i].ref.lastIndexOf('/');
+            	    t_html += '<li class="file"><a href="' + s_res[i].ref + '">' + (t_pos >= 0 ? s_res[i].ref.substr(t_pos + 1) : s_res[i].ref) + '</a></li>';
+		}
+		resultsTree.html(t_html);
+	    } else {
+                // Sanitize the search query so it won't so easily break
+                // the :contains operator:
+                query = query
+                            .replace(/\(/g, '\\(')
+                            .replace(/\)/g, '\\)')
+                        ;
+
+                // Get all nodes containing the search query (searches for all a, and returns
+                // their parent nodes <li>).
+                resultsTree.html(tree.find('a:containsIgnoreCase(' + query + ')').parent().clone());
+	    }
+	}
 
         // Perform live searches as the user types:
         // @todo: check support for 'input' event across more browsers?
@@ -99,16 +124,14 @@ function tree($array, $parent, $parts = array(), $step = 0) {
                 tree.hide();
             }
 
-            // Sanitize the search query so it won't so easily break
-            // the :contains operator:
-            query = query
-                        .replace(/\(/g, '\\(')
-                        .replace(/\)/g, '\\)')
-                    ;
-
-            // Get all nodes containing the search query (searches for all a, and returns
-            // their parent nodes <li>).
-            resultsTree.html(tree.find('a:containsIgnoreCase(' + query + ')').parent().clone());
+            if (!search_index_load) {
+		search_index_load = 1;
+		$.getJSON("search_index.json", function(data){
+		    if (data != null) search_indexes = lunr.Index.load(data);
+		    doSearch(query);
+		});
+            } else
+		doSearch(query);
         });
 
         // Handle directory-tree expansion:

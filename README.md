@@ -33,11 +33,20 @@ I made some modifications to MDwiki and Wikitten, so they can share the same Wik
 
  Once you add new Markdown document or delete/rename document in `library` directory, you should run this **`generate-index.sh`** to generate new index files.
 
+* Support full content searching Markdown document by modified version **lunr.js**, I write an auto generate search index file node.js program **`search.js`**, MDwiki and Wikitten use **search_index.json** index file in Wiki program directory.
+
+ ```bash
+ node search.js library search_index.json
+ ```
+
+ If you need full content searching support, you should run this **`search.js`** after making any changes to Wiki library.
+
 ### Changes to Wikitten
 
 * Support YAML front matter which begin and end with both three back-ticks (`` ` ``) and three dashes (-);
 * Show `index.md` document if switch to on directory (instead of tell user to select in Wiki library tree);
-* Set Markdown table width to 100%.
+* Set Markdown table width to 100%;
+* Support full content searching Markdown document, use **`search.js`** node.js program to generate **search_index.json** search index file.
 
 ## Deploy
 
@@ -48,6 +57,19 @@ Note: Wikitten and MDwiki share the same `library` Markdown document directory.
 Please refer to [Wikitten](http://wikitten.vizuina.com/) website, you need at least PHP 5.3 and php_fileinfo module, and your web server should support rewrite.
 
 Wikitten config file is `config.php` in root directory.
+
+ > **Note**
+ > 
+ > You need to change Apache or Nginx rule for **search_index.json** if you need full content searching support, or it will be served by Wikitten PHP by default.
+ > 
+ > Nginx rule may like this:
+ > 
+ > ```
+ > location ~* ^/search_index.json$ {
+ >     access_log off;
+ >     expires max;
+ > }
+ > ```
 
 ### Deploy MDwiki
 
